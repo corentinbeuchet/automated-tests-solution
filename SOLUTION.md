@@ -7,16 +7,16 @@ Chaque étape de l'énoncé est une **branche**, et chaque branche a sa **Pull R
 - `main` = projet tel que généré par Spring Initializr (étapes 1-2), avec `gradlew` **sans** droit d'exécution, comme s'il avait été committé depuis Windows.
 - Les branches se suivent : chacune part de la précédente **verte**. Les branches « rouge » sont des impasses volontaires.
 
-| Étape(s) README | Branche | Résultat CI attendu | Ce qu'on doit voir |
-|---|---|---|---|
-| 4 → 8 | `etape-08a-ci-rouge-permission-denied` | 🔴 `build` | `./gradlew: Permission denied` (piège 1, Windows) |
-| 8 (correction) | `etape-08b-ci-verte` | 🟢 `build` | `git update-index --chmod=+x gradlew` |
-| 9 | `etape-09-regression-rouge` | 🔴 `build` | `HelloControllerTest > leMessageHelloDoitEtreCorrect() FAILED` |
-| 10 → 11 | `etape-11-livrable` | 🟢 `build` | Artifacts `app` (app.jar) et `rapports` |
-| 12 → 13 | `etape-13a-checkstyle-rouge` | 🔴 `build` | `[AvoidStarImport]` sur `HelloControllerTest.java` (piège 2) |
-| 13 (correction) | `etape-13b-checkstyle-vert` | 🟢 `build` | import `Assertions.assertEquals` |
-| 14 → 15 | `etape-15-performance` | 🟢 `build` + `performance` | `p(95)` ≈ quelques ms, `http_req_failed` 0 % |
-| 16 | `etape-16-performance-rouge` | 🟢 `build`, 🔴 `performance` | seuil `p(95)<1` franchi |
+| Étape(s) README | PR | Branche | Résultat CI (vérifié le 12/11/2026) | Ce qu'on voit dans les logs |
+|---|---|---|---|---|
+| 4 → 8 | [#1](https://github.com/corentinbeuchet/automated-tests-solution/pull/1) | `etape-08a-ci-rouge-permission-denied` | [🔴 `build`](https://github.com/corentinbeuchet/automated-tests-solution/actions/runs/43217926214) | `./gradlew: Permission denied` (exit 126) — piège 1, Windows |
+| 8 (correction) | [#2](https://github.com/corentinbeuchet/automated-tests-solution/pull/2) | `etape-08b-ci-verte` | [🟢 `build`](https://github.com/corentinbeuchet/automated-tests-solution/actions/runs/43218026647) | `git update-index --chmod=+x gradlew` |
+| 9 | [#3](https://github.com/corentinbeuchet/automated-tests-solution/pull/3) | `etape-09-regression-rouge` | [🔴 `build`](https://github.com/corentinbeuchet/automated-tests-solution/actions/runs/43218088649) | `HelloControllerTest > leMessageHelloDoitEtreCorrect() FAILED` · 2 tests completed, 1 failed |
+| 10 → 11 | [#4](https://github.com/corentinbeuchet/automated-tests-solution/pull/4) | `etape-11-livrable` | [🟢 `build`](https://github.com/corentinbeuchet/automated-tests-solution/actions/runs/43218228780) | Artifacts `app` (app.jar) et `rapports` |
+| 12 → 13 | [#5](https://github.com/corentinbeuchet/automated-tests-solution/pull/5) | `etape-13a-checkstyle-rouge` | [🔴 `build`](https://github.com/corentinbeuchet/automated-tests-solution/actions/runs/43218276965) | `HelloControllerTest.java:4:47 … [AvoidStarImport]` — piège 2 (rapports quand même publiés) |
+| 13 (correction) | [#6](https://github.com/corentinbeuchet/automated-tests-solution/pull/6) | `etape-13b-checkstyle-vert` | [🟢 `build`](https://github.com/corentinbeuchet/automated-tests-solution/actions/runs/43218332894) | import `Assertions.assertEquals` |
+| 14 → 15 | [#7](https://github.com/corentinbeuchet/automated-tests-solution/pull/7) | `etape-15-performance` | [🟢 `build` + `performance`](https://github.com/corentinbeuchet/automated-tests-solution/actions/runs/43218438620) | k6 : thresholds respectés, 0 % d'erreurs |
+| 16 | [#8](https://github.com/corentinbeuchet/automated-tests-solution/pull/8) | `etape-16-performance-rouge` | [🟢 `build`, 🔴 `performance`](https://github.com/corentinbeuchet/automated-tests-solution/actions/runs/43218492909) | `p(95)=3.59ms` > 1 ms, 0 % d'erreurs, ≈14 400 req/s → `Test failed with code: 99` |
 
 **Solution finale** = `etape-15-performance` (l'étape 16 se termine en remettant `p(95)<200`).
 
