@@ -13,5 +13,16 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '25'
-      - name: Lancer les tests
-        run: ./gradlew test
+      - name: Construire et vérifier
+        run: ./gradlew build
+      - name: Publier le livrable
+        uses: actions/upload-artifact@v7
+        with:
+          name: app
+          path: build/libs/app.jar
+      - name: Publier les rapports (même en cas d'échec)
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: rapports
+          path: build/reports/
